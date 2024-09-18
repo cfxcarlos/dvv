@@ -1,0 +1,230 @@
+ -----------------------------------------------------------------------------------------------------------------------------------------
+-- VRP
+-----------------------------------------------------------------------------------------------------------------------------------------
+local Tunnel = module("vrp","lib/Tunnel")
+local Proxy = module("vrp","lib/Proxy")
+vRP = Proxy.getInterface("vRP")
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- CONNECTION
+-----------------------------------------------------------------------------------------------------------------------------------------
+vSERVER = Tunnel.getInterface("tattooshop")
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- VARIABLES
+-----------------------------------------------------------------------------------------------------------------------------------------
+local Active = {}
+local Camera = nil
+local Tattoos = {}
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- TATTOOSHOP:APPLY
+-----------------------------------------------------------------------------------------------------------------------------------------
+RegisterNetEvent("tattooshop:Apply")
+AddEventHandler("tattooshop:Apply",function(Table)
+    LocalPlayer["state"]["tattooshop"] = Table
+	Tattoos = Table
+	vSERVER.Update(Tattoos)
+	exports["tattooshop"]:Apply()
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- APPLY
+-----------------------------------------------------------------------------------------------------------------------------------------
+exports("Apply",function(Table,Ped)
+	if not Ped then
+		Ped = PlayerPedId()
+	end
+	if Table then
+		Tattoos = Table
+	end
+	ClearPedDecorations(Ped)
+	for Index,Overlay in pairs(Tattoos) do
+		AddPedDecorationFromHashes(Ped,Overlay,Index)
+	end
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- OPENTATTOOSHOP
+-----------------------------------------------------------------------------------------------------------------------------------------
+function OpenTattooshop()
+	CameraActive()
+	SetNuiFocus(true,true)
+	local Ped = PlayerPedId()
+	if GetEntityModel(Ped) == GetHashKey("mp_m_freemode_01") then
+		Active = Dataset["Masculino"]
+		Clothes(Ped, "Masculino")
+		exports["skinshop"]:Apply({
+			["hat"] = { item = -1, texture = 0 },
+			["pants"] = { item = 18, texture = 0 },
+			["vest"] = { item = 0, texture = 0 },
+			["bracelet"] = { item = -1, texture = 0 },
+			["backpack"] = { item = 0, texture = 0 },
+			["decals"] = { item = 0, texture = 0 },
+			["mask"] = { item = 0, texture = 0 },
+			["shoes"] = { item = 34, texture = 0 },
+			["tshirt"] = { item = 15, texture = 0 },
+			["torso"] = { item = 15, texture = 0 },
+			["accessory"] = { item = 0, texture = 0 },
+			["watch"] = { item = 0, texture = 0 },
+			["arms"] = { item = 1, texture = 0 },
+			["ear"] = { item = -1, texture = 0 }
+		})
+	elseif GetEntityModel(Ped) == GetHashKey("mp_f_freemode_01") then
+		Active = Dataset["Feminino"]
+		Clothes(Ped, "Feminino")
+		exports["skinshop"]:Apply({
+			["hat"] = { item = 0, texture = 0 },
+			["pants"] = { item = 17, texture = 0 },
+			["vest"] = { item = 0, texture = 0 },
+			["bracelet"] = { item = -1, texture = 0 },
+			["backpack"] = { item = 0, texture = 0 },
+			["decals"] = { item = 160, texture = 0 },
+			["mask"] = { item = 0, texture = 0 },
+			["shoes"] = { item = 35, texture = 0 },
+			["tshirt"] = { item = 14, texture = 0 },
+			["torso"] = { item = 15, texture = 0 },
+			["accessory"] = { item = 0, texture = 0 },
+			["watch"] = { item = -1, texture = 0 },
+			["arms"] = { item = 15, texture = 0 },
+			["glass"] = { item = 0, texture = 0 },
+			["ear"] = { item = 0, texture = 0 }
+		})
+	end
+	ClearAllPedProps(Ped)
+	vRP.playAnim(true,{"mp_sleep","bind_pose_180"},true)
+	SendNUIMessage({ shop = Active, tattoo = Tattoos })
+end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- CAMERAACTIVE
+-----------------------------------------------------------------------------------------------------------------------------------------
+function CameraActive()
+	if DoesCamExist(Camera) then
+		RenderScriptCams(false,false,0,false,false)
+		SetCamActive(Camera,false)
+		DestroyCam(Camera,false)
+		Camera = nil
+	end
+
+	local Ped = PlayerPedId()
+	local Heading = GetEntityHeading(Ped)
+	local Coords = GetOffsetFromEntityInWorldCoords(Ped,0.30,1.60,-0.10)
+
+	Camera = CreateCam("DEFAULT_SCRIPTED_CAMERA",true)
+	SetCamCoord(Camera,Coords["x"],Coords["y"],Coords["z"])
+	RenderScriptCams(true,true,100,true,true)
+	SetCamRot(Camera,0.0,0.0,Heading + 180)
+	SetEntityHeading(Ped,Heading - 10)
+	SetCamActive(Camera,true)
+end
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- CLOSE
+-----------------------------------------------------------------------------------------------------------------------------------------
+RegisterNUICallback("Close",function(Data,Callback)
+	if DoesCamExist(Camera) then
+		RenderScriptCams(false,false,0,false,false)
+		SetCamActive(Camera,false)
+		DestroyCam(Camera,false)
+		Camera = nil
+	end
+
+	SetNuiFocus(false,false)
+	vSERVER.Update(Tattoos)
+	vRP.removeObjects()
+	exports["skinshop"]:Apply(LocalPlayer["state"]["Skinshop"])
+	Callback("Ok")
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- THREADSTART
+-----------------------------------------------------------------------------------------------------------------------------------------
+CreateThread(function()
+	local Tables = {}
+
+	for Number = 1,#Locations do
+		Tables[#Tables + 1] = { Locations[Number]["x"],Locations[Number]["y"],Locations[Number]["z"],2.0,"E","Loja de Tatuagem","Pressione para abrir" }
+	end
+
+	TriggerEvent("hoverfy:Insert",Tables)
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- THREADLOCATIONS
+-----------------------------------------------------------------------------------------------------------------------------------------
+CreateThread(function()
+	while true do
+		local TimeDistance = 999
+		if LocalPlayer["state"]["Route"] < 900000 then
+			local Ped = PlayerPedId()
+			if not IsPedInAnyVehicle(Ped) then
+				local Coords = GetEntityCoords(Ped)
+
+				for Number = 1,#Locations do
+					if #(Coords - Locations[Number]) <= 2.0 then
+						TimeDistance = 1
+
+						if IsControlJustPressed(1,38) and vSERVER.CheckWanted() then
+							OpenTattooshop()
+						end
+					end
+				end
+			end
+		end
+
+		Wait(TimeDistance)
+	end
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- CHANGE
+-----------------------------------------------------------------------------------------------------------------------------------------
+RegisterNUICallback("Change",function(Data,Callback)
+	local Ped = PlayerPedId()
+	local Number = Data["id"]
+	local Types = Data["type"]
+
+	if Active[Types] and Active[Types][Number] then
+		local Name = Active[Types][Number]["name"]
+
+		if Tattoos[Name] then
+			Tattoos[Name] = nil
+		else
+			Tattoos[Name] = Active[Types][Number]["part"]
+		end
+
+		ClearPedDecorations(Ped)
+
+		for Index,Overlay in pairs(Tattoos) do
+			AddPedDecorationFromHashes(Ped,Overlay,Index)
+		end
+	end
+
+	Callback("Ok")
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- CLEAN
+-----------------------------------------------------------------------------------------------------------------------------------------
+RegisterNUICallback("Clean",function(Data,Callback)
+	ClearPedDecorations(PlayerPedId())
+	Tattoos = {}
+	Callback("Ok")
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- ROTATE
+-----------------------------------------------------------------------------------------------------------------------------------------
+RegisterNUICallback("Rotate",function(Data,Callback)
+	local Ped = PlayerPedId()
+	if Data["direction"] == "Left" then
+		SetEntityHeading(Ped,GetEntityHeading(Ped) - 5)
+	elseif Data["direction"] == "Right" then
+		SetEntityHeading(Ped,GetEntityHeading(Ped) + 5)
+	end
+
+	Callback("Ok")
+end)
+-----------------------------------------------------------------------------------------------------------------------------------------
+-- HANDSUP
+-----------------------------------------------------------------------------------------------------------------------------------------
+RegisterNUICallback("HandsUp",function(Data,Callback)
+	local Ped = PlayerPedId()
+	if IsEntityPlayingAnim(Ped,"random@mugging3","handsup_standing_base",3) then
+		StopAnimTask(Ped,"random@mugging3","handsup_standing_base",8.0)
+		vRP.AnimActive()
+	else
+		vRP.playAnim(true,{"random@mugging3","handsup_standing_base"},true)
+	end
+
+	Callback("Ok")
+end)

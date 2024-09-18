@@ -1,0 +1,95 @@
+PARA UMA MELHOR VISUALIZAÇÃO, COPIE O TEXTO ABAIXO E COLE EM ALGUMA SALA NO DISCORD.
+------------------------------------------------------------------------------------
+
+
+***LISTA DE ANIMAÇÕES (WH MODS)***
+
+Para executar uma animação, escreva antes o comando "``f``".
+**Ex.:** ``f fuzil10``; ``f pistola4``.
+
+O **script acompanha** o comando ``grafismo`` para que você possa **trocar o prefixo** das viaturas.
+**Ex.:** ``grafismo 2``; ``grafismo 7``.
+
+É possível utilizar **todas as animações listadas** na **gaiola** das viaturas que a possuem.
+
+O fuzil aparecerá **automaticamente** na janela da viatura ao **abaixar os vidros**. **Pressione** ``H`` para abaixar os vidros da viatura.
+
+**ANIMAÇÕES COM A PISTOLA**
+> pistola
+> pistola2
+> pistola3
+> pistola4
+> pistola5
+
+**ANIMAÇÕES COM O FUZIL**
+> fuzil
+> fuzil2
+> fuzil3
+> fuzil4
+> fuzil5
+> fuzil6
+> fuzil7
+> fuzil8
+> fuzil9
+> fuzil10
+> fuzil11
+> fuzil12
+> fuzil13
+> fuzil14
+> fuzil15
+> fuzil16
+> fuzil17
+> fuzil18
+> fuzil19
+> fuzil20
+> fuzil21
+> fuzil22
+> fuzilfenix
+> fuzilfenix2
+> patrulha
+> fuzilgaiola
+> fuzilgaiola2
+> fuzilgaiola3
+> fuzilgaiola4
+> fuzilgaiola5
+> fuzilgaiola6
+> fuzilgaiola7
+> fuzilgaiola8
+> fuzilgaiola9
+> fuzilgaiola10
+> fuzilgaiola11
+> fuzilgaiola12
+
+**ANIMAÇÕES DO INTERIOR DA VIATURA**
+> bracofora
+> bracofora2
+> bracofora3
+> bracofora4
+> bracofora5
+> bracofora6
+> olharfora
+> olharfora2
+
+**ANIMAÇÕES PARA ORDEM UNIDA**
+> sentido
+> sentidofuzil
+> descansar
+> descansarfuzil
+> apresenta
+> apresenta2
+> apresenta3
+
+
+O script também acompanha modos de segurar o fuzil e a pistola, basta executar um dos comandos abaixo.
+**Obs.:** ``Não é necessário executar o comando "f" antes dessas animações.``
+**Ex.:** ``segurarfuzil3``; ``segurarpistola``.
+**MODOS DE SEGURAR O FUZIL E A PISTOLA (digita /a antes de cada comando ex: /a segurarfuzil3)**
+> segurarfuzil
+> segurarfuzil2
+> segurarfuzil3
+> segurarfuzil4
+> segurarfuzil5
+> segurarfuzil6
+> segurarfuzil7
+> segurarpistola
+> segurarpistola2

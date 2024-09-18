@@ -1,0 +1,80 @@
+body {
+    background-color: transparent;
+    font-family: Arial, sans-serif;
+}
+
+.table-container {
+    width: 50%;
+}
+
+.styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 1.2em;
+    min-width: 250px;
+    background: transparent;
+    opacity: 0.6;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
+
+.styled-table thead tr {
+    background-color: #FF0000;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+}
+
+.styled-table th, .styled-table td {
+    padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: transparent;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #FF0000;
+}
+
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+
+.timer {
+    text-align: center;
+}
+
+#countdown {
+    font-size: 3em;
+    color: #FF0000;
+}
+
+.timer-cell {
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shaking-text {
+    animation: shake 0.5s infinite;
+}
+
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
